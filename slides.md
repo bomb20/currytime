@@ -1,5 +1,5 @@
 %Curry Time
 %Learn you a Haskell
-%Cameron Reuschel - Vinent Truchseß
+%Cameron Reuschel - Vincent Truchseß
 
 # The Haskell Programming Language
