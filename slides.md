@@ -3,3 +3,6 @@
 %Cameron Reuschel - Vincent Truchseß
 
 # The Haskell Programming Language
+
+![Lambda man](lambda_man.jpg)
+
