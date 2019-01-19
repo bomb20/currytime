@@ -18,22 +18,60 @@ header-includes:
 author: Cameron Reuschel - Vincent Truchseß
 title: Curry time - Learn you a Haskell
 ---
-# The Haskell Programming Language
+# Wat the haskell?
+
+## Intro
+
+###
 
 ![Lambda man](lambda_man_scaled.jpg)
 
-# Just Why?
 
-* Mutability considered harmful
-* Harmfulness considered bad
-* bad != good
+### A pure functional Programming Language
 
-# But What about loops or variables?
+  * Everything immutable
+  * Everything is lazy
 
-* _Loops are just glorified tail recurson_ - Djikstra, 1987  
+## Getting started
 
-* Variables.... No.
+### Tools
 
-# 
+  * GHC - The Glasgow Haskell Compiler
+  * A mature editor (e.g. vim)
+  * REPL-Integration (e.g. vim-slime for vim users)
 
+### Soak, Wash, Rinse, Repeat - The REPL
 
+# Functions
+
+## Basics
+
+###
+
+## More on Functions
+
+### Currying
+
+### Higher order Functions
+
+### Lambda Expressions
+
+# Types
+
+## Basic Types
+
+###
+
+## Lists
+
+### Creating Lists
+
+### Working on lists
+
+### Inifinite Lists
+
+### Data Types
+
+## Type Classes
+
+# IO
