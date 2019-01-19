@@ -35,6 +35,7 @@ title: Curry time - Learn you a Haskell
 
   * Everything immutable
   * Everything is lazy
+  * Everything is a function
 
 ## Getting started
 
@@ -50,7 +51,7 @@ title: Curry time - Learn you a Haskell
 
 ## Basics
 
-###
+### 
 
 ## More on Functions
 
@@ -72,14 +73,102 @@ title: Curry time - Learn you a Haskell
 
 ### Working on lists
 
-### Inifinite Lists
+### Infinite Lists
 
 ### Data Types
 
 ## Type Classes
 
-# IO
+# Dealing with Side Effects
 
-### Side Effects
+## Side Effects
+
+### What is a Side Effect?
+
+[columns]
+
+[column=0.5]
+
+*Any operation which modifies the state of the computer or which interacts with the outside world*
+
+\ 
+
+* variable assignment
+* displaying something
+* printing to console
+* writing to disk
+* accessing a database
+
+[column=0.5]
 
 ![Sideeffects](haskell_scaled.png)
+
+[/columns]
+
+### Dealing with Side Effects
+
+* Haskell is **pure**: There are no side effects
+* But every program interacts with its environment in some way
+* The `IO` monad *describes* an interaction with the environment
+* Descriptions can be *composed* through the *bind* operator `>>=`
+* The `main` function in Haskell returns an `IO ()` which describes the sum of all side effects to be executed by the Haskell runtime
+
+### Simulating imperative programming
+
+```haskell
+putStrLn :: String -> IO ()
+getLine :: IO String
+```
+
+```haskell
+getLine >>= (\firstLine -> 
+  getLine >>= (\secondLine -> 
+    putStrLine (firstLine ++ secondLine)
+      >> putStrLine "Done."))
+```
+
+```haskell
+do
+  firstLine <- getLine 
+  secondLine <- getLine
+  putStrLine $ firstLine ++ secondLine
+  putStrLine "Done."
+```
+
+### Example
+
+`getLine` yields an `IO String` which describes how to *later* yield a string by executing controlled side effects:
+
+\ 
+
+```haskell
+takeLinesUntil :: (String -> Bool) -> IO [String]
+takeLinesUntil predicate = go predicate []
+  where
+    go predicate lines = do
+      line <- getLine
+      if predicate line
+        then return $ reverse lines
+        else go predicate $ line : lines
+```
+
+### Main method
+
+```haskell
+main :: IO ()
+main = do
+  args <- getArgs
+  putStrLn "\nEnter code and input:\n"
+  codeLines <- takeLinesUntil null
+  let singleLineCode = intercalate "" codeLines
+  let (code, input) = parseInput singleLineCode
+  case validateBrackets code of
+    TooManyOpen -> putStrLn tooManyOpenError
+    TooManyClosed -> putStrLn tooManyClosedError
+    NoCode -> putStrLn noCodeError
+    Fine -> do
+      let out = interpretCode code input
+      putStrLn "Output:\n"
+      putStrLn out
+```
+
