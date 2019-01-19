@@ -24,6 +24,10 @@ title: Curry time - Learn you a Haskell
 
 ###
 
+![Intro](standbacktryhaskell_scaled.png)
+
+###
+
 ![Lambda man](lambda_man_scaled.jpg)
 
 
@@ -75,3 +79,7 @@ title: Curry time - Learn you a Haskell
 ## Type Classes
 
 # IO
+
+### Side Effects
+
+![Sideeffects](haskell_scaled.png)
