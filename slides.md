@@ -1,7 +1,7 @@
 ---
 header-includes:
   \usetheme{Darmstadt}
-
+theme: Darmstadt
 author: Cameron Reuschel - Vincent Truchseß
 title: Curry time - Learn you a Haskell
 ---
