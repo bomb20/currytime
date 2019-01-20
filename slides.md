@@ -84,7 +84,7 @@ addTwo :: Num a => a -> a
 addTwo = sum 2
 ```
 
-* `sum` is a **curried** function: it takes a number `x` and returns a function that takes a number `y` and returns the sum of `x` and `y`
+* `sum` is a **curried** function: it takes a number `x` and returns a function that takes a number `y` that returns the sum of `x` and `y`
 
 ```haskell
 -- (x +) :: a -> a
@@ -95,7 +95,7 @@ sum' x = (x +)
 ### Higher order Functions & Lambdas
 
 * A **higher order function** is a function that takes another function as an argument
-* A **lambda** is an anonymous function with syntax \
+* A **lambda expression** is an anonymous closure with syntax  
   `\arg arg2 ... -> expression`
 
 \bigskip
@@ -145,16 +145,56 @@ negate p = not . p
 favoritePrimes :: [Int]
 favoritePrimes = [3,7,9,11]
 
-evenNumbers = [x | x <- [1..50], x `mod` 2 == 0]
+evenNumbers = [x | x <- [0..50], x `mod` 2 == 0]
+
+evenNumbers' = [0,2..50]
 
 evenNumbersAndOne = 1 : evenNumbers
 
-alphabet = ['a'..'z'] ++ ['A' .. 'Z'
+alphabet = ['a'..'z'] ++ ['A' .. 'Z']
 ```
 
-### Working on lists
+### Basic list functions
+
+```haskell
+head [1, 2, 3] --> 1
+tail [1, 2, 3] --> [2, 3]
+init [1, 2, 3] --> [1, 2]
+last [1, 2, 3] --> 3
+
+take 2 [1, 2, 3] --> [1, 2]
+takeWhile (< 3) [1, 2, 3] --> [1, 2]
+
+drop 2 [1, 2, 3] --> [3]
+dropWhile (< 3) [1, 2, 3] --> [3]
+```
+
+### More on Lists
+
+```haskell
+zip ['a', 'b'] [1..] --> [('a',1), ('b', 2)]
+zipWith (+) [1, 2, 3] [4, 5, 6] --> [5, 5, 5]
+
+map show [1, 2, 3] --> "123"
+filter even [1, 2, 3, 4] --> [2, 4]
+any even [3, 5, 7] --> False
+```
+
+### Folds - Formally known as Reducers
 
 
+
+### Lists - an Example
+
+```haskell
+fizzBuzz = zipWith stringify [1..] fizzBuzzes
+  where
+    stringify num "" = show num
+    stringify _ str = str
+    fizzBuzzes = zipWith (++) fizzes buzzes
+    fizzes = cycle ["", "", "Fizz"]
+    buzzes = cucle ["", "", "", "", "Buzz"]
+```
 
 ## Data Types
 
