@@ -173,18 +173,49 @@ dropWhile (< 3) [1, 2, 3] --> [3]
 
 ```haskell
 zip ['a', 'b'] [1..] --> [('a',1), ('b', 2)]
-zipWith (+) [1, 2, 3] [4, 5, 6] --> [5, 5, 5]
+zipWith (+) [1, 2, 3] [4, 5, 6] --> [5, 7, 9]
 
-map show [1, 2, 3] --> "123"
+map abs [-1, -2, 3] --> [1, 2, 3]
 filter even [1, 2, 3, 4] --> [2, 4]
 any even [3, 5, 7] --> False
+
+cycle [1, 2, 3] --> [1, 2, 3, 1, 2, 3, .....
+repeat 'g' --> "ggggggggggggggggggg.........
+```
+Due to lazy evaluation we can have infinite lists.  
+Don't run `length` on this. It takes forever.
+
+### Folds - Formally known as Reducers
+
+`foldl` accumulates a *sequence* into a value *left to right*
+```haskell
+foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+foldl (+) 0 [1..5]
+```
+```hs
+foldl (+)     (0 + 1)                     [2..5]
+foldl (+)    ((0 + 1) + 2)                [3..5]
+foldl (+)   (((0 + 1) + 2) + 3)           [4, 5]
+foldl (+)  ((((0 + 1) + 2) + 3) + 4)      [5]
+foldl (+) (((((0 + 1) + 2) + 3) + 4) + 5) []
 ```
 
 ### Folds - Formally known as Reducers
 
+`foldr` accumulates a *sequence* into a value *right to left*
+```haskell
+foldr :: Foldable t => (b -> b -> a) -> b -> t a -> b
+foldr (+) 0 [1..5]
+```
+```hs
+(1 +                     (foldr (+) 0 [2..5]))
+(1 + (2 +                (foldr (+) 0 [3..5])))
+(1 + (2 + (3 +           (foldr (+) 0 [4, 5]))))
+(1 + (2 + (3 + (4 +      (foldr (+) 0 [5]   )))))
+(1 + (2 + (3 + (4 + (5 + (foldr (+) 0 []    ))))))
+```
 
-
-### Lists - an Example
+### An Example - FizzBuzz
 
 ```haskell
 fizzBuzz = zipWith stringify [1..] fizzBuzzes
@@ -192,8 +223,28 @@ fizzBuzz = zipWith stringify [1..] fizzBuzzes
     stringify num "" = show num
     stringify _ str = str
     fizzBuzzes = zipWith (++) fizzes buzzes
+		-- ["", "", "Fizz", "", "Buzz", "Fizz",...]
     fizzes = cycle ["", "", "Fizz"]
-    buzzes = cucle ["", "", "", "", "Buzz"]
+    buzzes = cycle ["", "", "", "", "Buzz"]
+
+["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz"...]
+```
+
+### Another Example - The Fibonnacci Sequence
+
+A non-tailrecursive implementation
+```hs
+fib 0 = 1
+fib 1 = 1
+fib n = fib (n - 1) + fib (n - 2)
+```
+A tailrecursive implementation
+```hs
+fib = 1:1:(zipWith (+) fib (tail fib))
+
+1:1:(zipWith (+) 1:1:(...) 1:(...))
+1:1:2:(zipWith (+) 1:2:(...) 2:(...))
+1:1:2:3:(zipWith (+) 2:3:(...) 3:(...))
 ```
 
 ## Data Types
