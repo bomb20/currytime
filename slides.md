@@ -18,8 +18,6 @@ header-includes:
 author: Cameron Reuschel - Vincent Truchseß
 title: Curry time - Learn you a Haskell
 ---
-# Wat the haskell?
-
 ## Intro
 
 ###
@@ -30,12 +28,12 @@ title: Curry time - Learn you a Haskell
 
 ![Lambda man](lambda_man_scaled.jpg)
 
-
 ### A pure functional Programming Language
 
   * Everything immutable
   * Everything is lazy
   * Everything is a function
+  * Everything is awesome
 
 ## Getting started
 
@@ -47,6 +45,88 @@ title: Curry time - Learn you a Haskell
 
 ### Soak, Wash, Rinse, Repeat - The REPL
 
+# Functional concepts
+
+## Purity
+
+### What is a Side Effect?
+
+[columns]
+
+[column=0.5]
+
+*Any operation which modifies the state of the computer or which interacts with the outside world*
+
+\bigskip
+
+* variable assignment
+* displaying something
+* printing to console
+* writing to disk
+* accessing a database
+
+[column=0.5]
+
+![Sideeffects](haskell_scaled.png)
+
+[/columns]
+
+### Purity - No Side Effects
+
+* Haskell is **pure** - there are no side effects
+* `=` is mathematical equality, *not* assignment
+* Purity leads to **referential transparency**: for every `x = expr` you can replace any occurrence of `x` with `expr` without changing the semantic of the code
+* An expression `f x` is **pure** if it is referentially transparent for every referentially transparent `x`
+
+### Referential Transparency - Example
+
+Not referentially transparent: \
+Successive calls to `count()` return different values.
+
+\smallskip
+
+```c
+int counter = 0;
+int count() { return ++counter; }
+
+int x = count();
+
+int a, b;
+a = x; b = x; // a == b == 1
+a = count(); b = count(); // a == 2, b == 3
+```
+
+**Pure functions do not modify any state. **\
+**They always return the same result given the same input.**
+
+### Lazyness
+
+... not today
+
+### Lazyness
+
+* Eager evaluation: expression is evaluated as soon as it is used
+* Lazy evaluation: expression is only evaluated when it is needed
+
+\smallskip
+
+```java
+int counter = 0;
+private int count() { return ++counter; }
+```
+
+```java
+int foo = Optional.of(1337).orElse(count()); 
+// Eager: foo == 1337; counter == 1;
+```
+
+```java
+int foo = Optional.of(1337).orElseGet(() -> count());
+// Lazy: foo == 1337; counter == 0;
+```
+
+**Everything in Haskell is evaluated lazily.**
+
 # Functions
 
 ## Basics
@@ -56,13 +136,16 @@ title: Curry time - Learn you a Haskell
 ```haskell
 sum :: Num a => a -> a -> a
 sum x y = x + y
-
+```
+```haskell
 -- type declarations can be omitted
 times2 a = a `sum` a
-
+```
+```haskell
 abs :: (Num a, Ord a) => a -> a
 abs x = if x < 0 then -x else x
-
+```
+```haskell
 compareTo :: (Num a, Ord a1) => a1 -> a1 -> a
 compareTo x y 
   | x > y = 1
@@ -74,17 +157,18 @@ compareTo x y
 
 ### Currying
 
-* All functions take a single argument and return a single value
+All functions take a single argument and return a single value
 
 ```haskell
 sum :: Num a => a -> a -> a
 sum x y = x + y
-
+```
+```haskell
 addTwo :: Num a => a -> a
 addTwo = sum 2
 ```
 
-* `sum` is a **curried** function: it takes a number `x` and returns a function that takes a number `y` that returns the sum of `x` and `y`
+`sum` is a **curried** function: it takes a number `x` and returns a function that takes a number `y` that returns the sum of `x` and `y`
 
 ```haskell
 -- (x +) :: a -> a
@@ -108,27 +192,6 @@ negate :: (a -> Bool) -> (a -> Bool)
 negate p = not . p
 ```
 
-# Interlude: Brainfuck
-
-## Brainfuck
-
-### What is Brainfuck?
-
-* Tape with cells holding a single byte each
-* A pointer to a cell can be moved left and right
-* The value of the cell can be incremented and decremented
-
-| Comment | Description                                                 |
-|:-------:|:------------------------------------------------------------|
-|  `>`    | Move the pointer to the right                               |
-|  `<`	  | Move the pointer to the left                                |
-|  `+`	  | Increment the memory cell under the pointer                 |
-|  `-`	  | Decrement the memory cell under the pointer                 |
-|  `.`	  | Output the character signified by the cell at the pointer   |
-|  `,`	  | Input a character and store it in the cell at the pointer   |
-|  `[`	  | Jump past the matching `]` if the cell is 0                 |
-|  `]`	  | Jump back to the matching `[` if the cell is nonzero        |
-
 # Types
 
 ## Basic Types
@@ -144,13 +207,13 @@ negate p = not . p
 ```haskell
 favoritePrimes :: [Int]
 favoritePrimes = [3,7,9,11]
-
+```
+```haskell
 evenNumbers = [x | x <- [0..50], x `mod` 2 == 0]
-
 evenNumbers' = [0,2..50]
-
 evenNumbersAndOne = 1 : evenNumbers
-
+```
+```haskell
 alphabet = ['a'..'z'] ++ ['A' .. 'Z']
 ```
 
@@ -161,10 +224,12 @@ head [1, 2, 3] --> 1
 tail [1, 2, 3] --> [2, 3]
 init [1, 2, 3] --> [1, 2]
 last [1, 2, 3] --> 3
-
+```
+```haskell
 take 2 [1, 2, 3] --> [1, 2]
 takeWhile (< 3) [1, 2, 3] --> [1, 2]
-
+```
+```haskell
 drop 2 [1, 2, 3] --> [3]
 dropWhile (< 3) [1, 2, 3] --> [3]
 ```
@@ -174,11 +239,13 @@ dropWhile (< 3) [1, 2, 3] --> [3]
 ```haskell
 zip ['a', 'b'] [1..] --> [('a',1), ('b', 2)]
 zipWith (+) [1, 2, 3] [4, 5, 6] --> [5, 7, 9]
-
+```
+```haskell
 map abs [-1, -2, 3] --> [1, 2, 3]
 filter even [1, 2, 3, 4] --> [2, 4]
 any even [3, 5, 7] --> False
-
+```
+```haskell
 cycle [1, 2, 3] --> [1, 2, 3, 1, 2, 3, .....
 repeat 'g' --> "ggggggggggggggggggg.........
 ```
@@ -247,13 +314,63 @@ fib = 1:1:(zipWith (+) fib (tail fib))
 1:1:2:3:(zipWith (+) 2:3:(...) 3:(...))
 ```
 
-## Data Types
+## Custom Data Types
 
-### Custom Data Types
+### Sum Types
 
-???
+Sum types are essentially represented as `enum`s in C-like languages
+
+\smallskip
+
+```haskell
+data BracketValidationResult
+  = TooManyOpen
+  | TooManyClosed
+  | Fine
+  | NoCode
+```
+
+### Product Types
+
+Product types are essentially `struct`s in C
+
+\smallskip
+
+```haskell
+data Tape = Tape [Int] Int [Int] 
+tape = Tape [1, 2] 3 [4]
+left  (Tape l _ _) = l
+right (Tape _ _ r) = r
+curr  (Tape _ c _) = c
+```
+```haskell
+-- record syntax
+data Tape = Tape
+  { left :: [Int], curr :: Int, right :: [Int] } 
+tape  = Tape [1, 2] 3 [4]
+tape' = Tape {left = [1, 2], curr = 3, right = [4]}
+```
+
+### Mix and Match
+
+```haskell
+data Point =
+  Point Float
+        Float
+  deriving (Show)
+```
+```haskell
+data Shape
+  = Circle { center :: Point
+           , radius :: Float }
+  | Rectangle { upperLeft :: Point
+              , lowerRight :: Point }
+  deriving (Show)
+```
 
 ## Type Classes
+
+???
 
 ## Pattern matching
 
@@ -304,31 +421,28 @@ increment Tape
   } = Tape l (c + 1) r
 ```
 
-# Dealing with Side Effects
+# Brainfuck
 
-## Side Effects
+## Basics
 
-### What is a Side Effect?
+### What is Brainfuck?
 
-[columns]
+* Tape with cells holding a single byte each
+* A pointer to a cell can be moved left and right
+* The value of the cell can be incremented and decremented
 
-[column=0.5]
+| Comment | Description                                                 |
+|:-------:|:------------------------------------------------------------|
+|  `>`    | Move the pointer to the right                               |
+|  `<`	  | Move the pointer to the left                                |
+|  `+`	  | Increment the memory cell under the pointer                 |
+|  `-`	  | Decrement the memory cell under the pointer                 |
+|  `.`	  | Output the character signified by the cell at the pointer   |
+|  `,`	  | Input a character and store it in the cell at the pointer   |
+|  `[`	  | Jump past the matching `]` if the cell is 0                 |
+|  `]`	  | Jump back to the matching `[` if the cell is nonzero        |
 
-*Any operation which modifies the state of the computer or which interacts with the outside world*
-
-\bigskip
-
-* variable assignment
-* displaying something
-* printing to console
-* writing to disk
-* accessing a database
-
-[column=0.5]
-
-![Sideeffects](haskell_scaled.png)
-
-[/columns]
+## Dealing with Side Effects
 
 ### Dealing with Side Effects
 
