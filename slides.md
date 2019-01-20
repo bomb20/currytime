@@ -377,8 +377,11 @@ data Shape
 
 ## Type Classes
 
-* Type classes are used to 'implement' an interface for a data type
-* 
+### Type Clases 1
+
+Type classes are used to 'implement' an interface for a type
+
+\smallskip
 
 ```haskell
 class Eq a where
@@ -389,9 +392,31 @@ class Eq a where
 
 Implementing `Eq` for a type `T` makes the type magically work for every function that expects an instance of `Eq`
 
-```haskell
+\smallskip
 
+```haskell
+instance Eq Tape where
+  x == y = 
+    left x == left y 
+    && curr x == curr y 
+    && right x == right y
 ```
+
+### Type Classes 2
+
+Type class instances can be derived from a type:
+
+```haskell
+data Tape = Tape [Int] Int [Int] deriving (Eq, Show)
+```
+
+Type classes itself can derive from other type classes:
+
+```haskell
+class (Eq a) => Num a where ...
+```
+
+Builtin useful type classes:
 
 ## Pattern matching
 
@@ -415,7 +440,9 @@ fib n = case n of
 ```haskell
 partition :: (a -> Bool) -> [a] -> ([a], [a])
 quicksort [] = []
-quicksort (p:xs) = (quicksort lesser) ++ [p] ++ (quicksort greater)
+quicksort (p:xs) = (quicksort lesser) 
+    ++ [p] 
+    ++ (quicksort greater)
     where (lesser, greater) = partition (< p) xs
 ```
 

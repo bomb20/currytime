@@ -1,6 +1,6 @@
 # Openkolloq - Haskell
 
-This document is ment to be compiled using pandoc.  
+This document is meant to be compiled using pandoc.  
 
 ## Compiling
 
