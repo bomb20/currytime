@@ -40,7 +40,7 @@ title: Curry time - Learn you a Haskell
 ### Tools
 
   * GHC - The Glasgow Haskell Compiler
-  * A mature editor (e.g. vim)
+  * A mature editor (e.g. vim, VSCode)
   * REPL-Integration (e.g. vim-slime for vim users)
 
 ### Soak, Wash, Rinse, Repeat - The REPL
@@ -67,16 +67,31 @@ title: Curry time - Learn you a Haskell
 
 [column=0.5]
 
-![Sideeffects](haskell_scaled.png)
+![Side Effects](haskell_scaled.png)
 
 [/columns]
 
 ### Purity - No Side Effects
 
-* Haskell is **pure** - there are no side effects
-* `=` is mathematical equality, *not* assignment
-* Purity leads to **referential transparency**: for every `x = expr` you can replace any occurrence of `x` with `expr` without changing the semantic of the code
+[columns]
+
+[column=0.6]
+
+* Haskell is **pure** - no side effects
+\smallskip
+* `=` is mathematical equality
+\smallskip
+* Purity leads to **referential transparency**: for every `x = expr` you can replace `x` with `expr` without changing semantics
+\smallskip
 * An expression `f x` is **pure** if it is referentially transparent for every referentially transparent `x`
+
+[column=0.4]
+
+![State - you're doing it wrong](statewrong.jpg)
+
+[/columns]
+
+## Referential Transparency
 
 ### Referential Transparency - Example
 
@@ -98,6 +113,8 @@ a = count(); b = count(); // a == 2, b == 3
 
 **Pure functions do not modify any state. **\
 **They always return the same result given the same input.**
+
+## Lazyness
 
 ### Lazyness
 
@@ -187,7 +204,8 @@ sum' x = (x +)
 ```haskell
 flip :: (a -> b -> c) -> (b -> a -> c)
 flip f = \x y -> f y x
-
+```
+```haskell
 negate :: (a -> Bool) -> (a -> Bool)
 negate p = not . p
 ```
@@ -246,8 +264,8 @@ filter even [1, 2, 3, 4] --> [2, 4]
 any even [3, 5, 7] --> False
 ```
 ```haskell
-cycle [1, 2, 3] --> [1, 2, 3, 1, 2, 3, .....
-repeat 'g' --> "ggggggggggggggggggg.........
+cycle [1, 2, 3] --> [1, 2, 3, 1, 2, 3, ...]
+repeat 'g' --> "ggggggggggggggggggg..."
 ```
 Due to lazy evaluation we can have infinite lists.  
 Don't run `length` on this. It takes forever.
@@ -370,7 +388,21 @@ data Shape
 
 ## Type Classes
 
-???
+* Type classes are used to 'implement' an interface for a data type
+* 
+
+```haskell
+class Eq a where
+    (==), (/=) :: a -> a -> Bool
+    x /= y = not (x == y)
+    x == y = not (x /= y)
+```
+
+Implementing `Eq` for a type `T` makes the type magically work for every function that expects an instance of `Eq`
+
+```haskell
+
+```
 
 ## Pattern matching
 
@@ -474,7 +506,7 @@ do
   putStrLine "Done."
 ```
 
-### Example
+### IO - Example
 
 `getLine` yields an `IO String` which describes how to *later* yield a string by executing controlled side effects:
 
@@ -491,7 +523,7 @@ takeLinesUntil predicate = go predicate []
         else go predicate $ line : lines
 ```
 
-### Main method
+### 
 
 ```haskell
 main :: IO ()
