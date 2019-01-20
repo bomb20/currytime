@@ -51,31 +51,116 @@ title: Curry time - Learn you a Haskell
 
 ## Basics
 
-### 
+### Basic Syntax
+
+```haskell
+sum :: Num a => a -> a -> a
+sum x y = x + y
+
+-- type declarations can be omitted
+times2 a = a `sum` a
+
+abs :: (Num a, Ord a) => a -> a
+abs x = if x < 0 then -x else x
+
+compareTo :: (Num a, Ord a1) => a1 -> a1 -> a
+compareTo x y 
+  | x > y = 1
+  | x < y = -1
+  | otherwise = 0
+```
 
 ## More on Functions
 
 ### Currying
 
-### Higher order Functions
+* All functions take a single argument and return a single value
 
-### Lambda Expressions
+```haskell
+sum :: Num a => a -> a -> a
+sum x y = x + y
+
+addTwo :: Num a => a -> a
+addTwo = sum 2
+```
+
+* `sum` is a **curried** function: it takes a number `x` and returns a function that takes a number `y` and returns the sum of `x` and `y`
+
+```haskell
+-- (x +) :: a -> a
+sum' :: Num a => a -> a -> a
+sum' x = (x +)
+```
+
+### Higher order Functions & Lambdas
+
+* A **higher order function** is a function that takes another function as an argument
+* A **lambda** is an anonymous function with syntax \
+  `\arg arg2 ... -> expression`
+
+\bigskip
+
+```haskell
+flip :: (a -> b -> c) -> (b -> a -> c)
+flip f = \x y -> f y x
+
+negate :: (a -> Bool) -> (a -> Bool)
+negate p = not . p
+```
+
+### Pattern matching
+
+# Interlude: Brainfuck
+
+## Brainfuck
+
+### What is Brainfuck?
+
+* Tape with cells holding a single byte each
+* A pointer to a cell can be moved left and right
+* The value of the cell can be incremented and decremented
+
+| Comment | Description                                                 |
+|:-------:|:------------------------------------------------------------|
+|  `>`    | Move the pointer to the right                               |
+|  `<`	  | Move the pointer to the left                                |
+|  `+`	  | Increment the memory cell under the pointer                 |
+|  `-`	  | Decrement the memory cell under the pointer                 |
+|  `.`	  | Output the character signified by the cell at the pointer   |
+|  `,`	  | Input a character and store it in the cell at the pointer   |
+|  `[`	  | Jump past the matching `]` if the cell is 0                 |
+|  `]`	  | Jump back to the matching `[` if the cell is nonzero        |
 
 # Types
 
 ## Basic Types
 
-###
+### 
+
+???
 
 ## Lists
 
 ### Creating Lists
 
+```haskell
+favoritePrimes :: [Int]
+favoritePrimes = [3,7,9,11]
+
+evenNumbers = [x | x <- [1..50], x `mod` 2 == 0]
+
+evenNumbersAndOne = 1 : evenNumbers
+
+alphabet = ['a'..'z'] ++ ['A' .. 'Z'
+```
+
 ### Working on lists
 
-### Infinite Lists
+
 
 ### Data Types
+
+???
 
 ## Type Classes
 
@@ -91,7 +176,7 @@ title: Curry time - Learn you a Haskell
 
 *Any operation which modifies the state of the computer or which interacts with the outside world*
 
-\ 
+\bigskip
 
 * variable assignment
 * displaying something
@@ -139,7 +224,7 @@ do
 
 `getLine` yields an `IO String` which describes how to *later* yield a string by executing controlled side effects:
 
-\ 
+\bigskip
 
 ```haskell
 takeLinesUntil :: (String -> Bool) -> IO [String]
