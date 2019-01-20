@@ -108,8 +108,6 @@ negate :: (a -> Bool) -> (a -> Bool)
 negate p = not . p
 ```
 
-### Pattern matching
-
 # Interlude: Brainfuck
 
 ## Brainfuck
@@ -158,11 +156,62 @@ alphabet = ['a'..'z'] ++ ['A' .. 'Z'
 
 
 
-### Data Types
+## Data Types
+
+### Custom Data Types
 
 ???
 
 ## Type Classes
+
+## Pattern matching
+
+### Pattern matching: Simple case
+
+```haskell
+fib 1 = 1
+fib 2 = 1
+fib n = fib (n-1) + fib (n-2)
+```
+
+```haskell
+fib n = case n of 
+  1 -> 1
+  2 -> 1
+  n -> fib (n-1) + fib (n-2)
+```
+
+### Pattern Matching: Deconstruction
+
+```haskell
+partition :: (a -> Bool) -> [a] -> ([a], [a])
+quicksort [] = []
+quicksort (p:xs) = (quicksort lesser) ++ [p] ++ (quicksort greater)
+    where (lesser, greater) = partition (< p) xs
+```
+
+### Pattern Matching: Deconstruction
+
+```haskell
+-- without overflow management
+increment :: Tape -> Tape
+```
+
+```haskell
+data Tape = Tape [Int] Int [Int]
+increment (Tape left curr right) = 
+    Tape left (curr + 1) right
+```
+
+```haskell
+data Tape =
+  Tape { left :: [Int], curr :: Int, right :: [Int] }
+increment Tape
+  { left = l
+  , curr = c
+  , right = r
+  } = Tape l (c + 1) r
+```
 
 # Dealing with Side Effects
 
