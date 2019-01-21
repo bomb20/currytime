@@ -5,22 +5,30 @@ theme: Darmstadt
 author: Cameron Reuschel - Vincent Truchseß
 title: Curry time - Learn you a Haskell
 ---
-## Intro
+###
+
+![](standbacktryhaskell.png)
 
 ###
 
-![Intro](standbacktryhaskell_scaled.png)
-
-###
-
-![Lambda man](lambda_man_scaled.jpg)
+![](lambda_man.jpg)
 
 ### A pure functional Programming Language
 
-  * Everything immutable
-  * Everything is lazy
-  * Everything is a function
-  * Everything is awesome
+[columns]
+
+[column=0.5]
+
+![](2000px-Haskell-Logo.svg.png){height=250px}
+
+[column=0.5]
+
+* Everything immutable
+* Everything is lazy
+* Everything is a function
+* Everything is awesome
+
+[/columns]
 
 ## Getting started
 
@@ -56,11 +64,11 @@ title: Curry time - Learn you a Haskell
 
 [column=0.5]
 
-![Side Effects](haskell_scaled.png)
+![XKCD on Side Effects](haskell.png){height=200px}
 
 [/columns]
 
-### Purity - No Side Effects
+### Purity: No Side Effects
 
 [columns]
 
@@ -76,7 +84,7 @@ title: Curry time - Learn you a Haskell
 
 [column=0.4]
 
-![State - you're doing it wrong](statewrong.jpg)
+![](statewrong.jpg)
 
 [/columns]
 
@@ -135,8 +143,6 @@ int foo = Optional.of(1337).orElseGet(() -> count());
 
 # Functions
 
-## Basics
-
 ### Basic Syntax
 
 ```haskell
@@ -158,8 +164,6 @@ compareTo x y
   | x < y = -1
   | otherwise = 0
 ```
-
-## More on Functions
 
 ### Currying
 
@@ -199,7 +203,7 @@ negate :: (a -> Bool) -> (a -> Bool)
 negate p = not . p
 ```
 
-# Types
+# Working with Types
 
 ## Basic Types
 
@@ -361,18 +365,17 @@ tape' = Tape {left = [1, 2], curr = 3, right = [4]}
 ### Mix and Match
 
 ```haskell
-data Point =
-  Point Float
-        Float
-  deriving (Show)
+data Point = Point Float Float
 ```
+
+\bigskip
+
 ```haskell
 data Shape
   = Circle { center :: Point
            , radius :: Float }
   | Rectangle { upperLeft :: Point
               , lowerRight :: Point }
-  deriving (Show)
 ```
 
 ## Type Classes
@@ -417,6 +420,16 @@ class (Eq a) => Num a where ...
 ```
 
 Builtin useful type classes:
+
+```
+Eq, Show, Read, Ord, Bounded, Enum
+Num, Integral, Real, Fractional
+Foldable, Functor, Monad
+```
+
+### Overview - Type Class Hierarchy
+
+![Standard Haskell Classes https://www.haskell.org/onlinereport/basic.html](classes.gif){height=250px}
 
 ## Pattern matching
 
@@ -471,7 +484,7 @@ increment Tape
 
 # Brainfuck
 
-## Basics
+
 
 ### What is Brainfuck?
 
@@ -490,14 +503,239 @@ increment Tape
 |  `[`	  | Jump past the matching `]` if the cell is 0                 |
 |  `]`	  | Jump back to the matching `[` if the cell is nonzero        |
 
-## Dealing with Side Effects
+### The Idea
+
+* Build an interpreter for Brainfuck in Haskell
+* Very stateful but small problem
+* Code and input through `stdin` separated by `!`
+
+\bigskip
+
+Find the whole program including tests at \
+https://github.com/XDracam/brainfuck-haskell
+
+
+## Getting started
+
+### Defining the Tape
+
+```haskell
+data Tape = Tape
+  { left :: [Int]
+  , curr :: Int
+  , right :: [Int]
+  } deriving (Eq)
+
+emptyTape :: Tape
+emptyTape = Tape [] 0 []
+```
+
+### Printing the Tape
+
+```haskell
+import Data.List (intercalate, intersperse)
+
+instance Show Tape where
+  show (Tape l c r) =
+    show $ "[" ++ l'
+        ++ "|>>" ++ show c ++ "<<|"
+        ++ r' ++ "]"
+    where
+      l' = intersperse '|'
+           $ intercalate ""
+           $ show <$> reverse l
+      r' = intersperse '|'
+           $ intercalate ""
+           $ show <$> r
+```
+
+### Moving the tape
+
+```haskell
+moveLeft :: Tape -> Tape
+moveLeft Tape [] rh r = Tape [] 0 (rh : r)
+moveLeft Tape (c:l) rh r = Tape l c (rh : r)
+
+moveRight :: Tape -> Tape
+moveRight Tape l lh [] = Tape (lh : l) 0 []
+moveRight Tape l lh (c:r) = Tape (lh : l) c r
+```
+
+### Incrementing and Decrementing
+
+```haskell
+increment :: Tape -> Tape
+increment t = t {curr = incrWithOverflow $ curr t}
+  where
+    incrWithOverflow i =
+      if i == 255
+        then 0
+        else i + 1
+
+decrement :: Tape -> Tape
+decrement t = t {curr = decrWithOverflow $ curr t}
+  where
+    decrWithOverflow i =
+      if i == 0
+        then 255
+        else i - 1
+```
+
+### Reading and Writing
+
+```haskell
+readChar :: Tape -> Char
+readChar Tape {curr = c} = chr c
+
+writeChar :: Tape -> Char -> Tape
+writeChar t c = t {curr = ord c}
+```
+
+\bigskip
+
+Note: `writeChar` returns a function that yields a new tape after taking a char to write. The actual IO is performed in the *IO layer*.
+
+## Dealing with Input
+
+### Handle the Raw Input
+
+```haskell
+cleanupCode :: String -> String
+cleanupCode = filter (`elem` validChars)
+  where
+    validChars = "<>[],.+-"
+
+parseInput :: [String] -> (String, String)
+parseInput codeLines = (code, tail input)
+  where 
+    codeWithLines = intercalate "\n" codeLines
+    (code, input) = span (/= '!') codeWithLines
+```
+
+### Validate Brackets
+
+```haskell
+data ValidationResult
+  = TooManyOpen | TooManyClosed | Fine | NoCode
+  deriving (Eq, Show)
+
+validateBrackets :: String -> ValidationResult
+validateBrackets code
+  | null code = NoCode
+  | count > 0 = TooManyOpen
+  | count < 0 = TooManyClosed
+  | otherwise = Fine
+  where
+    count sum '[' = sum + 1
+    count sum ']' = sum - 1
+    count sum _ = sum
+    count = foldl count 0 code
+```
+
+## Interpreting the Code
+
+### Defining the Basics
+
+```haskell
+handleChar :: Char -> Tape -> Tape
+handleChar '>' = moveRight
+handleChar '<' = moveLeft
+handleChar '+' = increment
+handleChar '-' = decrement
+handleChar other = error $ "Unexpected char: " ++ [other]
+
+data InterpreterState = InterpreterState
+  { code :: String
+  , seen :: String
+  , input :: String
+  , output :: String
+  , tape :: Tape
+  }
+```
+
+### Running the code
+
+```haskell
+interpretCode :: String -> String -> (Tape, String)
+interpretCode code input = 
+  go (InterpreterState code "" input "" emptyTape)
+  where
+    go :: InterpreterState -> (Tape, String)
+    go (InterpreterState "" _ _ out t) = (t, reverse out)
+    go s@(InterpreterState (c:code) seen inp out t) = ...
+```
+
+### Handling Read and Write
+
+```haskell
+go s@(InterpreterState (c:code) seen inp out t) =
+  case c of
+    '.' -> go s { code = code, seen = '.' : seen
+                , output = readChar t : out}
+    ',' ->
+      if null inp
+        then error "Error: No input left."
+        else go s {code = code, seen = seen'
+                  , input = inp', tape = tape'}
+      where ci:inp' = inp
+            tape' = writeChar t ci
+            seen' = ',' : seen
+    -- LOOP HANDLING --
+    c -> go s {code = code, seen = c : seen
+              , tape = handleChar c t}
+```
+
+### Find Corresponding Brackets
+
+```haskell
+partitionByFinding :: Char -> String -> (String, String)
+partitionByFinding c toView = go c toView "" 0
+  where
+    go :: Char -> String -> String -> Int -> (String, String)
+    go c [] found _ =
+      error $
+      "Unexpected error: Failure to find a " ++
+      [c] ++ " after finding " ++ found
+    go c (h:toView) found 0
+      | c == h = (c : found, toView)
+    go c (h:toView) found open =
+      case h of
+        '[' -> go c toView ('[' : found) (open + 1)
+        ']' -> go c toView (']' : found) (open - 1)
+        other -> go c toView (other : found) open
+```
+
+### Handling Loops
+
+```haskell
+go s@(InterpreterState (c:code) seen inp out t) = 
+-- READ/WRITE HANDLING --
+'[' ->
+  if curr t == 0 -- skip loop?
+    then go s {code = todo, seen = loop ++ ('[' : seen)}
+    else go s {code = code, seen = '[' : seen}
+  where (loop, todo) = partitionByFinding ']' code
+']' ->
+  if curr t == 0 -- exit loop?
+    then go s {code = code, seen = ']' : seen}
+    else go s {code = loop ++ (']' : code), seen = rem}
+  where (loop, rem) = partitionByFinding '[' seen
+c -> go s {code = code, seen = c : seen
+          , tape = handleChar c t}
+```
+
+## Dealing with IO and Side Effects
 
 ### Dealing with Side Effects
 
 * Haskell is **pure**: There are no side effects
+\bigskip
 * But every program interacts with its environment in some way
+\bigskip
 * The `IO` monad *describes* an interaction with the environment
+\bigskip
 * Descriptions can be *composed* through the *bind* operator `>>=`
+\bigskip
 * The `main` function in Haskell returns an `IO ()` which describes the sum of all side effects to be executed by the Haskell runtime
 
 ### Simulating imperative programming
@@ -513,7 +751,9 @@ getLine >>= (\firstLine ->
     putStrLine (firstLine ++ secondLine)
       >> putStrLine "Done."))
 ```
-
+\smallskip
+**is equivalent to:**
+\smallskip
 ```haskell
 do
   firstLine <- getLine 
@@ -547,14 +787,13 @@ main = do
   args <- getArgs
   putStrLn "\nEnter code and input:\n"
   codeLines <- takeLinesUntil null
-  let singleLineCode = intercalate "" codeLines
-  let (code, input) = parseInput singleLineCode
+  let (code, input) = parseInput codeLines
   case validateBrackets code of
     TooManyOpen -> putStrLn tooManyOpenError
     TooManyClosed -> putStrLn tooManyClosedError
     NoCode -> putStrLn noCodeError
     Fine -> do
-      let out = interpretCode code input
+      let (out, _) = interpretCode code input
       putStrLn "Output:\n"
       putStrLn out
 ```

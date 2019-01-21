@@ -8,7 +8,7 @@ To compile, run the following command within the directory containing
 `slides.md`
 
 ```
-pandoc -t beamer --incremental --highlight-style kate --filter columnfilters.py --template="./custom.latex" --slide-level 3 slides.md -o slides.pdf
+pandoc -t beamer --incremental --filter columnfilters.py  --slide-level 3 slides.md -o slides.pdf
 ```
 
 The filter enables writing columns like this:
