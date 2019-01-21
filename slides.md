@@ -21,7 +21,7 @@ title: Curry time - Learn you a Haskell
 
 [column=0.5]
 
-* Everything immutable
+* Everything is immutable
 * Everything is lazy
 * Everything is a function
 * Everything is awesome
@@ -165,24 +165,42 @@ compareTo x y
 
 ### Currying
 
-All functions take a single argument and return a single value
+[columns]
+
+[column=0.6]
+
+All functions take a single argument \
+and return a single value
+
+\bigskip
 
 ```haskell
 sum :: Num a => a -> a -> a
 sum x y = x + y
 ```
+
 ```haskell
 addTwo :: Num a => a -> a
 addTwo = sum 2
 ```
 
-`sum` is a **curried** function: it takes a number `x` and returns a function that takes a number `y` that returns the sum of `x` and `y`
+\bigskip
+
+`sum` is a **curried** function: it takes an `x` and returns a function that takes a `y` that returns the sum of `x` and `y`
+
+\bigskip
 
 ```haskell
 -- (x +) :: a -> a
 sum' :: Num a => a -> a -> a
 sum' x = (x +)
 ```
+
+[column=0.4]
+
+![James Haskell Eating Curry](haskellcurry.jpg)
+
+[/columns]
 
 ### Higher order Functions & Lambdas
 
