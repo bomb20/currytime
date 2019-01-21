@@ -1,6 +1,4 @@
 ---
-header-includes:
-  \usetheme{Darmstadt}
 theme: Darmstadt
 author: Cameron Reuschel - Vincent Truchseß
 title: Curry time - Learn you a Haskell
@@ -35,7 +33,7 @@ title: Curry time - Learn you a Haskell
 ### Tools
 
   * GHC - The Glasgow Haskell Compiler
-  * A mature editor (e.g. vim, VSCode)
+  * A mature editor (e.g. vim, nvim, emacs, ...)
   * REPL-Integration (e.g. vim-slime for vim users)
 
 ### Soak, Wash, Rinse, Repeat - The REPL
@@ -92,7 +90,7 @@ title: Curry time - Learn you a Haskell
 
 ### Referential Transparency - Example
 
-Not referentially transparent: \
+***Not*** referentially transparent: \
 Successive calls to `count()` return different values.
 
 \smallskip
@@ -209,7 +207,10 @@ negate p = not . p
 
 ### 
 
-???
+Haskell supports the usual basic types
+
+```hs
+Numbers jjjjjjjjjjjjjjjjjjjjjjjjj
 
 ## Lists
 
@@ -218,47 +219,41 @@ negate p = not . p
 ```haskell
 favoritePrimes :: [Int]
 favoritePrimes = [3,7,9,11]
-```
-```haskell
+
 evenNumbers = [x | x <- [0..50], x `mod` 2 == 0]
 evenNumbers' = [0,2..50]
 evenNumbersAndOne = 1 : evenNumbers
-```
-```haskell
+
 alphabet = ['a'..'z'] ++ ['A' .. 'Z']
 ```
 
 ### Basic list functions
 
 ```haskell
-head [1, 2, 3] --> 1
-tail [1, 2, 3] --> [2, 3]
-init [1, 2, 3] --> [1, 2]
-last [1, 2, 3] --> 3
-```
-```haskell
-take 2 [1, 2, 3] --> [1, 2]
-takeWhile (< 3) [1, 2, 3] --> [1, 2]
-```
-```haskell
-drop 2 [1, 2, 3] --> [3]
-dropWhile (< 3) [1, 2, 3] --> [3]
+head [1, 2, 3]            -- > 1
+tail [1, 2, 3]            -- > [2, 3]
+init [1, 2, 3]            -- > [1, 2]
+last [1, 2, 3]            -- > 3
+
+take 2 [1, 2, 3]          -- > [1, 2]
+takeWhile (< 3) [1, 2, 3] -- > [1, 2]
+
+drop 2 [1, 2, 3]          -- > [3]
+dropWhile (< 3) [1, 2, 3] -- > [3]
 ```
 
 ### More on Lists
 
 ```haskell
-zip ['a', 'b'] [1..] --> [('a',1), ('b', 2)]
-zipWith (+) [1, 2, 3] [4, 5, 6] --> [5, 7, 9]
-```
-```haskell
-map abs [-1, -2, 3] --> [1, 2, 3]
-filter even [1, 2, 3, 4] --> [2, 4]
-any even [3, 5, 7] --> False
-```
-```haskell
-cycle [1, 2, 3] --> [1, 2, 3, 1, 2, 3, ...]
-repeat 'g' --> "ggggggggggggggggggg..."
+zip ['a', 'b'] [1..]            -- > [('a',1), ('b', 2)]
+zipWith (+) [1, 2, 3] [4, 5, 6] -- > [5, 7, 9]
+
+map abs [-1, -2, 3]             -- > [1, 2, 3]
+filter even [1, 2, 3, 4]        -- > [2, 4]
+any even [3, 5, 7]              -- > False
+
+cycle [1, 2, 3] -- > [1, 2, 3, 1, 2, 3, ...]
+repeat 'g'      -- > "ggggggggggggggggggg..."
 ```
 Due to lazy evaluation we can have infinite lists.  
 Don't run `length` on this. It takes forever.
@@ -291,38 +286,6 @@ foldr (+) 0 [1..5]
 (1 + (2 + (3 +           (foldr (+) 0 [4, 5]))))
 (1 + (2 + (3 + (4 +      (foldr (+) 0 [5]   )))))
 (1 + (2 + (3 + (4 + (5 + (foldr (+) 0 []    ))))))
-```
-
-### An Example - FizzBuzz
-
-```haskell
-fizzBuzz = zipWith stringify [1..] fizzBuzzes
-  where
-    stringify num "" = show num
-    stringify _ str = str
-    fizzBuzzes = zipWith (++) fizzes buzzes
-		-- ["", "", "Fizz", "", "Buzz", "Fizz",...]
-    fizzes = cycle ["", "", "Fizz"]
-    buzzes = cycle ["", "", "", "", "Buzz"]
-
-["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz"...]
-```
-
-### Another Example - The Fibonnacci Sequence
-
-A non-tailrecursive implementation
-```hs
-fib 0 = 1
-fib 1 = 1
-fib n = fib (n - 1) + fib (n - 2)
-```
-A tailrecursive implementation
-```hs
-fib = 1:1:(zipWith (+) fib (tail fib))
-
-1:1:(zipWith (+) 1:1:(...) 1:(...))
-1:1:2:(zipWith (+) 1:2:(...) 2:(...))
-1:1:2:3:(zipWith (+) 2:3:(...) 3:(...))
 ```
 
 ## Custom Data Types
@@ -480,6 +443,59 @@ increment Tape
   , curr = c
   , right = r
   } = Tape l (c + 1) r
+```
+
+# Examples
+
+### An Example - FizzBuzz
+
+```haskell
+fizzBuzz = zipWith stringify [1..] fizzBuzzes
+  where
+    stringify num "" = show num
+    stringify _ str = str
+    -- > stringify [(1, ""), (2, ""), (3, "Fizz")]
+    -- > ["1", "2", "Fizz"]
+    fizzBuzzes = zipWith (++) fizzes buzzes
+    -- > ["", "", "Fizz", "", "Buzz", "Fizz",...]
+    fizzes = cycle ["", "", "Fizz"]
+    buzzes = cycle ["", "", "", "", "Buzz"]
+
+["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz"...]
+```
+
+### Another Example - The Fibonnacci Sequence
+
+A naive implementation
+```hs
+fib 0 = 1
+fib 1 = 1
+fib n = fib (n - 1) + fib (n - 2)
+```
+A less naive implementation
+```hs
+fib = 1:1:(zipWith (+) fib (tail fib))
+
+1:1:(      zipWith (+) 1:1:[...] 1:[...])
+1:1:2:(    zipWith (+) 1:2:[...] 2:[...])
+1:1:2:3:(  zipWith (+) 2:3:[...] 3:[...])
+1:1:2:3:5:(zipWith (+) 3:5:[...] 5:[...])
+```
+
+### Another Example - Prime Numbers
+
+An impementation of the ***Sieve of Eratosthenes***
+
+```haskell
+sieve = go 1 (False:(repeat True))
+  where
+    go i (True:xs) = True:(go (i + 1) newSieve)
+      where 
+        newSieve = zipWith (&&) xs (cycle seq)
+        seq = (take (i - 1) (repeat True)) ++ [False]
+    go i (x:xs) = x:(go (i + 1) xs)
+
+primes = map fst $ filter snd $ zip [1..] sieve
 ```
 
 # Brainfuck
