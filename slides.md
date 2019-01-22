@@ -221,14 +221,16 @@ negate p = not . p
 
 # Working with Types
 
-## Basic Types
+### Basic Types
 
-### 
-
-Haskell supports the usual basic types
-
+Besides the usual Number types (Integers, Floats, Fractions, ...) Haskell
+also includes:
 ```hs
-Numbers jjjjjjjjjjjjjjjjjjjjjjjjj
+Chars:   'a', 'b', 'c', ...
+Strings: "hello" = ['h', 'e', 'l', 'l', 'o']
+Tuples:  (1, "hello", (\a -> a * 42))
+
+```
 
 ## Lists
 
@@ -432,12 +434,13 @@ fib n = case n of
 ### Pattern Matching: Deconstruction
 
 ```haskell
-partition :: (a -> Bool) -> [a] -> ([a], [a])
 quicksort [] = []
 quicksort (p:xs) = (quicksort lesser) 
     ++ [p] 
     ++ (quicksort greater)
     where (lesser, greater) = partition (< p) xs
+
+partition :: (a -> Bool) -> [a] -> ([a], [a])
 ```
 
 ### Pattern Matching: Deconstruction
