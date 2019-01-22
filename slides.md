@@ -521,8 +521,6 @@ primes = map fst $ filter snd $ zip [1..] sieve
 
 # Brainfuck
 
-
-
 ### What is Brainfuck?
 
 * Tape with cells holding a single byte each
@@ -637,13 +635,14 @@ Note: `writeChar` returns a function that yields a new tape after taking a char 
 ### Handle the Raw Input
 
 ```haskell
-cleanupCode :: String -> String
-cleanupCode = filter (`elem` validChars)
+extractCode :: String -> String
+extractCode = 
+  filter (`elem` validChars) . takeWhile ('!' /=)
   where
     validChars = "<>[],.+-"
 
 parseInput :: [String] -> (String, String)
-parseInput codeLines = (code, tail input)
+parseInput codeLines = (extractCode code, tail input)
   where 
     codeWithLines = intercalate "\n" codeLines
     (code, input) = span (/= '!') codeWithLines
