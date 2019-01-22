@@ -600,20 +600,10 @@ moveRight Tape l lh (c:r) = Tape (lh : l) c r
 
 ```haskell
 increment :: Tape -> Tape
-increment t = t {curr = incrWithOverflow $ curr t}
-  where
-    incrWithOverflow i =
-      if i == 255
-        then 0
-        else i + 1
+increment t = t {curr = (curr t + 1) `mod` 256}
 
 decrement :: Tape -> Tape
-decrement t = t {curr = decrWithOverflow $ curr t}
-  where
-    decrWithOverflow i =
-      if i == 0
-        then 255
-        else i - 1
+decrement t = t {curr = (curr t - 1) `mod` 256}
 ```
 
 ### Reading and Writing
