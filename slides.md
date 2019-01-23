@@ -515,15 +515,15 @@ fib = 1:1:(zipWith (+) fib (tail fib))
 An implementation of the ***Sieve of Eratosthenes***
 
 ```haskell
-sieve = go 1 (False:(repeat True))
+indexIsPrime = go 1 False : repeat True
   where
-    go i (True:xs) = True:(go (i + 1) newSieve)
+    go i (True : xs) = True : go (i + 1) sieve
       where 
-        newSieve = zipWith (&&) xs (cycle seq)
-        seq = (take (i - 1) (repeat True)) ++ [False]
-    go i (x:xs) = x:(go (i + 1) xs)
+        mask = replicate (i - 1) True ++ [False]
+        sieve = zipWith (&&) xs (cycle mask)
+    go i (False : xs) = False : go (i + 1) xs
 
-primes = map fst $ filter snd $ zip [1..] sieve
+primes = map fst $ filter snd $ zip [1..] indexIsPrime
 ```
 
 # Brainfuck
