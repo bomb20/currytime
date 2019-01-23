@@ -7,10 +7,6 @@ title: Curry time - Learn you a Haskell
 
 ![](standbacktryhaskell.png)
 
-###
-
-![](lambda_man.jpg)
-
 ### A pure functional Programming Language
 
 [columns]
@@ -30,17 +26,15 @@ title: Curry time - Learn you a Haskell
 
 ## Getting started
 
-### Tools
+### History - The Inspiration
 
-  * GHC - The Glasgow Haskell Compiler
-  * A mature editor (e.g. vim, nvim, emacs, ...)
-  * REPL-Integration (e.g. vim-slime for vim users)
+![James Haskell - 2010](demo.png){height=250px}
 
-### Soak, Wash, Rinse, Repeat - The REPL
+### History - The Creator
 
-![James Haskell - 2010](demo.png)
+![Philip Wadler aka Lambda Man](lambda_man.jpg){height=250px}
 
-# Functional concepts
+# Functional Concepts
 
 ## Purity
 
@@ -86,8 +80,6 @@ title: Curry time - Learn you a Haskell
 
 [/columns]
 
-## Referential Transparency
-
 ### Referential Transparency - Example
 
 ***Not*** referentially transparent: \
@@ -128,13 +120,13 @@ private int count() { return ++counter; }
 ```
 
 ```java
-int foo = Optional.of(1337).orElse(count()); 
 // Eager: foo == 1337; counter == 1;
+int foo = Optional.of(1337).orElse(count()); 
 ```
 
 ```java
-int foo = Optional.of(1337).orElseGet(() -> count());
 // Lazy: foo == 1337; counter == 0;
+int foo = Optional.of(1337).orElseGet(() -> count());
 ```
 
 **Everything in Haskell is evaluated lazily.**
@@ -178,6 +170,8 @@ and return a single value
 sum :: Num a => a -> a -> a
 sum x y = x + y
 ```
+
+\bigskip
 
 ```haskell
 addTwo :: Num a => a -> a
@@ -244,7 +238,7 @@ evenNumbers = [x | x <- [0..50], x `mod` 2 == 0]
 evenNumbers' = [0,2..50]
 evenNumbersAndOne = 1 : evenNumbers
 
-alphabet = ['a'..'z'] ++ ['A' .. 'Z']
+alphabet = ['a'..'z'] ++ ['A'..'Z']
 ```
 
 ### Basic list functions
@@ -275,6 +269,7 @@ any even [3, 5, 7]              -- > False
 cycle [1, 2, 3] -- > [1, 2, 3, 1, 2, 3, ...]
 repeat 'g'      -- > "ggggggggggggggggggg..."
 ```
+
 Due to lazy evaluation we can have infinite lists.  
 Don't run `length` on this. It takes forever.
 
@@ -347,6 +342,10 @@ tape' = Tape {left = [1, 2], curr = 3, right = [4]}
 
 ### Mix and Match
 
+[columns]
+
+[column=0.7]
+
 ```haskell
 data Point = Point Float Float
 ```
@@ -355,17 +354,23 @@ data Point = Point Float Float
 
 ```haskell
 data Shape
-  = Circle { center :: Point
-           , radius :: Float }
-  | Rectangle { upperLeft :: Point
-              , lowerRight :: Point }
+  = Circle Point Float
+  | Rectangle 
+    { upperLeft :: Point
+    , lowerRight :: Point }
 ```
+
+[column=0.3]
+
+![James Haskell is in shape](haskellinshape.jpg)
+
+[/columns]
 
 ## Type Classes
 
 ### Type Clases 1
 
-Type classes are used to 'implement' an interface for a type
+Type classes are used to 'implement' an interface for a type:
 
 \smallskip
 
@@ -376,7 +381,8 @@ class Eq a where
     x == y = not (x /= y)
 ```
 
-Implementing `Eq` for a type `T` makes the type magically work for every function that expects an instance of `Eq`
+Implementing `Eq` for a type `T` makes the type magically \
+work for every function that expects an instance of `Eq`
 
 \smallskip
 
@@ -419,15 +425,17 @@ Foldable, Functor, Monad
 ### Pattern matching: Simple case
 
 ```haskell
+fib 0 = 1
 fib 1 = 1
-fib 2 = 1
 fib n = fib (n-1) + fib (n-2)
 ```
 
+\smallskip
+
 ```haskell
 fib n = case n of 
+  0 -> 1
   1 -> 1
-  2 -> 1
   n -> fib (n-1) + fib (n-2)
 ```
 
@@ -436,8 +444,7 @@ fib n = case n of
 ```haskell
 quicksort [] = []
 quicksort (p:xs) = (quicksort lesser) 
-    ++ [p] 
-    ++ (quicksort greater)
+    ++ [p] ++ (quicksort greater)
     where (lesser, greater) = partition (< p) xs
 
 partition :: (a -> Bool) -> [a] -> ([a], [a])
@@ -446,14 +453,14 @@ partition :: (a -> Bool) -> [a] -> ([a], [a])
 ### Pattern Matching: Deconstruction
 
 ```haskell
--- without overflow management
+-- with overflow handling
 increment :: Tape -> Tape
 ```
 
 ```haskell
 data Tape = Tape [Int] Int [Int]
 increment (Tape left curr right) = 
-    Tape left (curr + 1) right
+    Tape left ((curr + 1) `mod` 256) right
 ```
 
 ```haskell
@@ -463,7 +470,7 @@ increment Tape
   { left = l
   , curr = c
   , right = r
-  } = Tape l (c + 1) r
+  } = Tape l ((c + 1) `mod` 256) r
 ```
 
 # Examples
@@ -505,7 +512,7 @@ fib = 1:1:(zipWith (+) fib (tail fib))
 
 ### Another Example - Prime Numbers
 
-An impementation of the ***Sieve of Eratosthenes***
+An implementation of the ***Sieve of Eratosthenes***
 
 ```haskell
 sieve = go 1 (False:(repeat True))
@@ -541,14 +548,13 @@ primes = map fst $ filter snd $ zip [1..] sieve
 ### The Idea
 
 * Build an interpreter for Brainfuck in Haskell
-* Very stateful but small problem
 * Code and input through `stdin` separated by `!`
+* Do not use any side effects
 
-\bigskip
+\bigskip 
 
 Find the whole program including tests at \
-https://github.com/XDracam/brainfuck-haskell
-
+[\underline{https://github.com/XDracam/brainfuck-haskell}](https://github.com/XDracam/brainfuck-haskell)
 
 ## Getting started
 
@@ -627,7 +633,7 @@ Note: `writeChar` returns a function that yields a new tape after taking a char 
 ```haskell
 extractCode :: String -> String
 extractCode = 
-  filter (`elem` validChars) . takeWhile ('!' /=)
+  filter (`elem` validChars) . takeWhile (/= '!')
   where
     validChars = "<>[],.+-"
 
@@ -688,8 +694,14 @@ interpretCode code input =
   where
     go :: InterpreterState -> (Tape, String)
     go (InterpreterState "" _ _ out t) = (t, reverse out)
-    go s@(InterpreterState (c:code) seen inp out t) = ...
+    go s@(InterpreterState (c:code) seen inp out t) = 
 ```
+
+\bigskip
+
+\begin{center}
+  \textbf{•••}
+\end{center}
 
 ### Handling Read and Write
 
@@ -706,7 +718,7 @@ go s@(InterpreterState (c:code) seen inp out t) =
       where ci:inp' = inp
             tape' = writeChar t ci
             seen' = ',' : seen
-    -- LOOP HANDLING --
+    -- LOOP HANDLING GOES HERE --
     c -> go s {code = code, seen = c : seen
               , tape = handleChar c t}
 ```
@@ -735,7 +747,7 @@ partitionByFinding c toView = go c toView "" 0
 
 ```haskell
 go s@(InterpreterState (c:code) seen inp out t) = 
--- READ/WRITE HANDLING --
+-- READ/WRITE HANDLING GOES HERE --
 '[' ->
   if curr t == 0 -- skip loop?
     then go s {code = todo, seen = loop ++ ('[' : seen)}
@@ -755,13 +767,13 @@ c -> go s {code = code, seen = c : seen
 ### Dealing with Side Effects
 
 * Haskell is **pure**: There are no side effects
-\bigskip
+\smallskip
 * But every program interacts with its environment in some way
-\bigskip
+\smallskip
 * The `IO` monad *describes* an interaction with the environment
-\bigskip
+\smallskip
 * Descriptions can be *composed* through the *bind* operator `>>=`
-\bigskip
+\smallskip
 * The `main` function in Haskell returns an `IO ()` which describes the sum of all side effects to be executed by the Haskell runtime
 
 ### Simulating imperative programming
@@ -778,7 +790,9 @@ getLine >>= (\firstLine ->
       >> putStrLine "Done."))
 ```
 \smallskip
-**is equivalent to:**
+\begin{center}
+*is equivalent to:*
+\end{center}
 \smallskip
 ```haskell
 do
