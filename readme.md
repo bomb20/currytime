@@ -1,25 +1,27 @@
-# Openkolloq - Haskell
+# Curry Time - Learn You a Haskell
 
-This document is meant to be compiled using pandoc.  
+## Intro
 
-## Compiling
+Slides from the talk _Curry-Time - Learn You a Haskell_ held by Cameron Reuschel
+and Vincent Truchseß in a series of _Open Kolloq_ talks at the _Department of
+Computer Science - University of Würzburg_.
+
+
+## Compiling the Slides
+
+### Dependencies
+
+- pandoc
+- pandocfilters
+- python3
+
+### Building PDF Slides
 
 To compile, run the following command within the directory containing
-`slides.md`
+`slides.md`. 
 
 ```
-pandoc -t beamer --incremental --filter columnfilters.py  --slide-level 3 slides.md -o slides.pdf
+pandoc -t beamer --filter columnfilters.py  --slide-level 3 slides.md -o slides.pdf
 ```
 
-The filter enables writing columns like this:
-
-```
-[columns]
-[column=0.5]
-LEFT TEXT
-[column=0.5]
-RIGHT TEXT
-[/columns]
-```
-
-It requires python and the `pandocfilters` package.
+This will create the file `slides.pdf` inside the working directory.  

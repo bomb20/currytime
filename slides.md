@@ -1,11 +1,11 @@
 ---
-theme: Darmstadt
+theme: metropolis
 author: Cameron Reuschel - Vincent Truchseß
 title: Curry time - Learn you a Haskell
 ---
 ###
 
-![](standbacktryhaskell.png)
+![](pics/standbacktryhaskell.png)
 
 ### A pure functional Programming Language
 
@@ -13,7 +13,7 @@ title: Curry time - Learn you a Haskell
 
 [column=0.5]
 
-![](2000px-Haskell-Logo.svg.png){height=250px}
+![](pics/2000px-Haskell-Logo.svg.png){height=250px}
 
 [column=0.5]
 
@@ -28,11 +28,11 @@ title: Curry time - Learn you a Haskell
 
 ### History - The Inspiration
 
-![James Haskell - 2010](demo.png){height=250px}
+![James Haskell - 2010](pics/demo.png){height=250px}
 
 ### History - The Creator
 
-![Philip Wadler aka Lambda Man](lambda_man.jpg){height=250px}
+![Philip Wadler aka Lambda Man](pics/lambda_man.jpg){height=250px}
 
 # Functional Concepts
 
@@ -56,7 +56,7 @@ title: Curry time - Learn you a Haskell
 
 [column=0.5]
 
-![XKCD on Side Effects](haskell.png){height=200px}
+![XKCD on Side Effects](pics/haskell.png){height=200px}
 
 [/columns]
 
@@ -76,7 +76,7 @@ title: Curry time - Learn you a Haskell
 
 [column=0.4]
 
-![](statewrong.jpg)
+![](pics/statewrong.jpg)
 
 [/columns]
 
@@ -192,7 +192,7 @@ sum' x = (x +)
 
 [column=0.4]
 
-![James Haskell Eating Curry](haskellcurry.jpg)
+![James Haskell Eating Curry](pics/haskellcurry.jpg)
 
 [/columns]
 
@@ -362,7 +362,7 @@ data Shape
 
 [column=0.3]
 
-![James Haskell is in shape](haskellinshape.jpg)
+![James Haskell is in shape](pics/haskellinshape.jpg)
 
 [/columns]
 
@@ -418,7 +418,7 @@ Foldable, Functor, Monad
 
 ### Overview - Type Class Hierarchy
 
-![Standard Haskell Classes https://www.haskell.org/onlinereport/basic.html](classes.gif){height=250px}
+![Standard Haskell Classes https://www.haskell.org/onlinereport/basic.html](pics/classes.gif){height=250px}
 
 ## Pattern matching
 
