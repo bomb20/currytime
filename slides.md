@@ -9,20 +9,17 @@ title: Curry time - Learn you a Haskell
 
 ### A pure functional Programming Language
 
-[columns]
-
-[column=0.5]
-
+::: {.columns}
+:::: {.column width=0.5}
 ![](pics/2000px-Haskell-Logo.svg.png){height=250px}
-
-[column=0.5]
-
+::::
+:::: {.column width=0.5}
 * Everything is immutable
 * Everything is lazy
 * Everything is a function
 * Everything is awesome
-
-[/columns]
+::::
+:::
 
 ## Getting started
 
@@ -40,10 +37,8 @@ title: Curry time - Learn you a Haskell
 
 ### What is a Side Effect?
 
-[columns]
-
-[column=0.5]
-
+::: {.columns}
+:::: {.column width=0.5}
 *Any operation which modifies the state of the computer or which interacts with the outside world*
 
 \bigskip
@@ -53,19 +48,16 @@ title: Curry time - Learn you a Haskell
 * printing to console
 * writing to disk
 * accessing a database
-
-[column=0.5]
-
+::::
+:::: {.column width=0.5}
 ![XKCD on Side Effects](pics/haskell.png){height=200px}
-
-[/columns]
+::::
+:::
 
 ### Purity: No Side Effects
 
-[columns]
-
-[column=0.6]
-
+::: {.columns}
+:::: {.column width=0.6}
 * Haskell is **pure** - no side effects
 \smallskip
 * `=` is mathematical equality
@@ -73,12 +65,11 @@ title: Curry time - Learn you a Haskell
 * Purity leads to **referential transparency**: for every `x = expr` you can replace `x` with `expr` without changing semantics
 \smallskip
 * An expression `f x` is **pure** if it is referentially transparent for every referentially transparent `x`
-
-[column=0.4]
-
+::::
+:::: {.column width=0.4}
 ![](pics/statewrong.jpg)
-
-[/columns]
+::::
+:::
 
 ### Referential Transparency - Example
 
@@ -157,10 +148,8 @@ compareTo x y
 
 ### Currying
 
-[columns]
-
-[column=0.6]
-
+::: {.columns}
+:::: {.column width=0.6}
 All functions take a single argument \
 and return a single value
 
@@ -189,12 +178,11 @@ addTwo = sum 2
 sum' :: Num a => a -> a -> a
 sum' x = (x +)
 ```
-
-[column=0.4]
-
+::::
+:::: {.column width=0.4}
 ![James Haskell Eating Curry](pics/haskellcurry.jpg)
-
-[/columns]
+::::
+:::
 
 ### Higher order Functions & Lambdas
 
@@ -342,10 +330,8 @@ tape' = Tape {left = [1, 2], curr = 3, right = [4]}
 
 ### Mix and Match
 
-[columns]
-
-[column=0.7]
-
+::: {.columns}
+:::: {.column width=0.7}
 ```haskell
 data Point = Point Float Float
 ```
@@ -359,12 +345,11 @@ data Shape
     { upperLeft :: Point
     , lowerRight :: Point }
 ```
-
-[column=0.3]
-
+::::
+:::: {.column width=0.3}
 ![James Haskell is in shape](pics/haskellinshape.jpg)
-
-[/columns]
+::::
+:::
 
 ## Type Classes
 
