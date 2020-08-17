@@ -23,6 +23,34 @@ title: Curry time - Learn you a Haskell
 
 ## Getting started
 
+### History - The Reason
+
+1985 - *Miranda* releases: proprietary lazy functional language
+
+\smallskip
+
+1987 - A dozen more non-strict purely functional languages
+
+\smallskip
+
+1987 at the conference on \hfill \break
+\quad \quad \emph{Functional Programming Languages \& Computer Architecture}
+
+- Consensus to form a committee to define an *open standard* for lazy functional languages
+- Consolidate existing languages into a common one as basis for further reasearch into lazy FP languages
+
+\smallskip
+
+1990 - Haskell 1.0 released
+
+\smallskip
+
+1997 - Haskell 98 released: stable, minimal, portable, stdlib
+
+\smallskip
+
+2010 - Haskell 2010 released: integrated many former extensions
+
 ### History - The Inspiration
 
 ![James Haskell - 2010](pics/demo.png){height=250px}
